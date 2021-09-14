@@ -2,6 +2,7 @@
 
 # Xcode user data
 xcuserdata
+.DS_Store
 
 ## Playgrounds
 timeline.xctimeline
