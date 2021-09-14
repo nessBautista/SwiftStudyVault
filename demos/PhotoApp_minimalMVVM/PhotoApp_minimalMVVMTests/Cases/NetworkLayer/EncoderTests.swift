@@ -6,27 +6,53 @@
 //
 
 import XCTest
-
+@testable import PhotoApp_minimalMVVM
+import OrderedCollections
 class EncoderTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    var sut: EncoderType!
+    override func setUp() {
+        sut = UnsplashEncoder.url
+        super.setUp()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func givenURLEncoder(){
+        sut = UnsplashEncoder.url
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func givenJSONEncoder(){
+        sut = UnsplashEncoder.json
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    override func tearDown() {
+        sut = nil
+        super.tearDown()
+    }
+    //MARK: - Utilities
+    func verify(parameters: [String: Any], exists inQuery:[URLQueryItem]){
+        for item in inQuery {
+            XCTAssertNotNil(parameters[item.name])
         }
+    }
+    
+    //MARK: - Initial Configuration
+    func testEncoder_subscribesToEncoderType(){
+        XCTAssertTrue((sut as AnyObject) is EncoderType)
+    }
+    
+    func testURLEncoder_encodesParamsIntoURL(){
+        //given
+        givenURLEncoder()
+        let parameters: OrderedDictionary<String, Any> = ["param1": 1, "param2":2]
+        var testRequest = URLRequest(url: URL(string: "https://test.example.com/")!)
+        
+        //when
+        sut.encode(parameters, in: &testRequest)
+        
+        //then
+        let queryItems = NetworkUtilities.getQueryItems(from: testRequest.url!)
+        XCTAssertNotNil(queryItems)        
+        XCTAssertTrue(NetworkUtilities.verify(queryItems: queryItems!, contain: parameters))
     }
 
 }

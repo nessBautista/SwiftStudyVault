@@ -6,3 +6,7 @@
 //
 
 import Foundation
+//protocol NetworkClient {
+//    associatedtype EndPoint: EndPointType
+//    associatedtype Model: Codable
+//}

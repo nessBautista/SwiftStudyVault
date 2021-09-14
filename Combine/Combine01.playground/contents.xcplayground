@@ -6,5 +6,8 @@
         <page name='Operators'/>
         <page name='Networking'/>
         <page name='ImageDownload'/>
+        <page name='Zip'/>
+        <page name='HelloFuture'/>
+        <page name='HelloSubject'/>
     </pages>
 </playground>

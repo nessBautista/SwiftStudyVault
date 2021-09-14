@@ -6,9 +6,12 @@
 //
 
 import Foundation
-enum UnsplashEndPoint: EndPointType {
+import OrderedCollections
+enum UnsplashEndPoint {
     case getPhotos(page:Int, perPage:Int, orderBy:String?)
-    
+}
+
+extension UnsplashEndPoint: EndPointType {
     var baseURL: URL {
         return URL(string: "https://api.unsplash.com/")!
     }
@@ -28,6 +31,7 @@ enum UnsplashEndPoint: EndPointType {
             if let params = self.parameters {
                 encoder.encode(params, in: &request)
             }
+            request.allHTTPHeaderFields = self.headers
             return request
         }
     }
@@ -43,15 +47,20 @@ enum UnsplashEndPoint: EndPointType {
         }
     }
     
-    var parameters: [String : Any]? {
+    var parameters: OrderedDictionary<String, Any>? {
         switch self {
         case .getPhotos(let page, let perPage,let orderBy):
-            var params:[ String: Any] = [:]
-            params["page"] = page
+            var params:OrderedDictionary<String, Any> = ["page": page]
             params["per_page"] = perPage
             params["order_by"] = orderBy
             return params
         }
     }
     
+    var headers: [String : String] {
+        var headers: [String: String] = [:]
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
+        headers["Authorization"] = "Authorization: Client-ID \(self.clientID)"
+        return headers
+    }
 }

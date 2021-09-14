@@ -6,3 +6,8 @@
 //
 
 import Foundation
+import OrderedCollections
+protocol EncoderType {
+    func encode(_ params: OrderedDictionary<String, Any>, in request: inout URLRequest)
+}
+
